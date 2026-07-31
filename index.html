@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMART USER's STOR</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+        body { 
+            background: #030712; 
+            color: #ffffff; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 15px; 
+            overflow-x: hidden;
+        }
+        .hidden { display: none !important; }
+        
+        .container { width: 100%; max-width: 480px; }
+        .title { color: #00f2fe; font-size: 22px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; text-align: center; text-shadow: 0 0 15px rgba(0,242,254,0.6); }
+        .subtitle { color: #94a3b8; font-size: 13px; margin-bottom: 20px; text-align: center; }
+        
+        /* FIRST UI: WATER GLASS EFFECT CARDS (YURIKEY STYLE) */
+        .water-card {
+            background: linear-gradient(135deg, rgba(11, 24, 43, 0.9), rgba(6, 16, 29, 0.95));
+            border: 1.5px solid rgba(0, 242, 254, 0.35);
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 14px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 242, 254, 0.05);
+            backdrop-filter: blur(12px);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* LIVE WATER SHINE WAVE */
+        .water-card::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -60%;
+            width: 220%;
+            height: 220%;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.15) 0%, rgba(0, 114, 255, 0.05) 45%, transparent 70%);
+            animation: waterFlow 7s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes waterFlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .water-card:hover { 
+            transform: translateY(-3px); 
+            border-color: #00f2fe; 
+            box-shadow: 0 12px 30px rgba(0, 242, 254, 0.35); 
+        }
+
+        /* TIME WIDGET WITH GLOW */
+        .time-widget {
+            background: rgba(0, 242, 254, 0.08);
+            border: 1.5px solid #00f2fe;
+            border-radius: 14px;
+            padding: 12px 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+            backdrop-filter: blur(8px);
+        }
+        .time-text { font-size: 14px; font-weight: 800; color: #00f2fe; text-shadow: 0 0 10px rgba(0,242,254,0.5); }
+
+        .tag-group { display: flex; gap: 8px; margin-bottom: 8px; position: relative; z-index: 2; }
+        .tag { background: rgba(0, 242, 254, 0.15); border: 1px solid rgba(0, 242, 254, 0.3); padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; color: #00f2fe; }
+
+        .card-title { font-size: 18px; font-weight: 800; color: #ffffff; position: relative; z-index: 2; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .card-author { font-size: 12px; color: #94a3b8; margin-top: 4px; position: relative; z-index: 2; }
+
+        /* BACK BUTTON */
+        .unique-back-btn {
+            background: linear-gradient(135deg, #ff0055, #7a00ff);
+            color: #fff; border: none; padding: 12px 26px; border-radius: 30px;
+            font-weight: 800; font-size: 14px; cursor: pointer; display: inline-flex;
+            align-items: center; gap: 8px; box-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+            transition: 0.3s; margin-bottom: 20px; text-transform: uppercase;
+        }
+
+        /* CATEGORY CARDS (EXACT COLORS FROM YOUR SCREENSHOT) */
+        .cat-card {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 22px; border-radius: 18px; margin-bottom: 14px;
+            font-weight: 800; font-size: 16px; cursor: pointer;
+            transition: all 0.3s ease; position: relative; overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        .cat-card:hover { transform: scale(1.02); }
+
+        .c-api { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+        .c-boot { background: linear-gradient(135deg, #b5179e, #7209b7); }
+        .c-fps { background: linear-gradient(135deg, #ff4e50, #f9d423); color: #050811; }
+        .c-touch { background: linear-gradient(135deg, #11998e, #38ef7d); color: #050811; }
+        .c-wifi { background: linear-gradient(135deg, #ff416c, #8a2387); }
+        .c-termux { background: linear-gradient(135deg, #f12711, #f5af19); color: #050811; }
+        .c-modules { background: linear-gradient(135deg, #4776e6, #8e54e9); }
+
+        /* FILE SECTIONS & SPACING */
+        .section-header {
+            color: #00f2fe;
+            font-size: 15px;
+            font-weight: bold;
+            margin: 25px 0 12px 0;
+            padding-bottom: 6px;
+            border-bottom: 1.5px solid rgba(0, 242, 254, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 0 0 10px rgba(0,242,254,0.4);
+        }
+
+        .media-preview-img { width: 100%; border-radius: 14px; margin-top: 12px; max-height: 250px; object-fit: cover; border: 1px solid rgba(255,255,255,0.3); }
+        video { width: 100%; border-radius: 14px; margin-top: 12px; outline: none; border: 1.5px solid rgba(0, 242, 254, 0.4); box-shadow: 0 0 15px rgba(0,242,254,0.2); }
+
+        /* INPUTS & BUTTONS */
+        .input-group { display: flex; align-items: center; border: 1.5px solid #00f2fe; border-radius: 12px; overflow: hidden; background-color: rgba(11, 17, 30, 0.8); margin-bottom: 12px; }
+        .input-field { width: 100%; background: rgba(11, 17, 30, 0.8); border: 1px solid rgba(0,242,254,0.4); outline: none; padding: 12px; color: #ffffff; border-radius: 10px; margin-bottom: 10px; }
+        .btn { background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; font-weight: 800; border: none; padding: 13px 20px; border-radius: 12px; cursor: pointer; width: 100%; margin-top: 8px; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); transition: 0.2s; }
+        .btn:active { transform: scale(0.98); }
+        .btn-danger { background: linear-gradient(135deg, #ff0055, #ff4b2b); color: #fff; box-shadow: 0 0 15px rgba(255, 0, 85, 0.4); }
+        
+        .spinner { border: 4px solid rgba(0, 242, 254, 0.1); width: 42px; height: 42px; border-radius: 50%; border-left-color: #00f2fe; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .admin-box { background: rgba(255, 0, 85, 0.12); border: 1.5px solid #ff0055; padding: 16px; border-radius: 16px; margin-bottom: 22px; backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- STEP 1: Direct Login UI -->
+        <div id="loginSection" class="water-card" style="text-align:center; padding: 30px 20px;">
+            <div class="title">SMART USER's STOR</div>
+            <div class="subtitle">Enter access key to continue</div>
+            <div class="input-group">
+                <input type="password" id="userKey" class="input-field" style="margin-bottom:0;" placeholder="Enter Key Here">
+            </div>
+            <button class="btn" onclick="handleLogin()">Login</button>
+        </div>
+
+        <!-- STEP 2: Loading Validation -->
+        <div id="loadingSection" class="water-card hidden" style="text-align:center; padding: 30px;">
+            <div class="title">SMART USER's STOR</div>
+            <div class="spinner"></div>
+            <p style="color:#00f2fe; font-size:14px; margin-top:10px; font-weight:bold;">Syncing Cloud Data...</p>
+        </div>
+
+        <!-- STEP 3: Main Dashboard -->
+        <div id="mainDashboard" class="hidden">
+            <div class="title">SMART USER's STOR</div>
+            
+            <div id="userTimeBox" class="time-widget">
+                <div class="time-text" id="remainingTimeText">Validity: Checking...</div>
+            </div>
+
+            <!-- Owner Panel -->
+            <div id="ownerGlobalPanel" class="admin-box hidden">
+                <h4 style="color:#ff0055; margin-bottom:10px;">[OWNER CONTROL PANEL]</h4>
+                <input type="text" id="newAppKeyInput" placeholder="Set New Key" class="input-field" style="border:1px solid #ff0055;">
+                <select id="keyValidityDays" class="input-field" style="border:1px solid #ff0055; color:#00f2fe; background:#0b111e;">
+                    <option value="1">1 Day Validity</option>
+                    <option value="7">7 Days Validity</option>
+                    <option value="30">30 Days Validity</option>
+                    <option value="365">1 Year Validity</option>
+                </select>
+                <button class="btn" style="background:#ff0055; color:#fff;" onclick="updateAppKey()">Set / Update Key</button>
+                <button class="btn" style="background:#dc2626; color:#fff; margin-top:5px;" onclick="removeUserKey()">Remove / Block Current Key</button>
+            </div>
+
+            <!-- Options 1 to 7 with Water Glass UI -->
+            <div class="water-card" onclick="selectManager('1) KITSUNE MASK')">
+                <div class="tag-group"><span class="tag">0.72 MB</span><span class="tag">WEBUI</span><span class="tag">ACTION</span></div>
+                <div class="card-title">1) KITSUNE MASK</div>
+                <div class="card-author">Author: Kitsune Dev</div>
+            </div>
+
+            <div class="water-card" onclick="selectManager('2) KERNEL SU')">
+                <div class="tag-group"><span class="tag">1.20 MB</span><span class="tag">ROOT</span><span class="tag">KERNEL</span></div>
+                <div class="card-title">2) KERNEL SU</div>
+                <div class="card-author">Author: KernelSU Team</div>
+            </div>
+
+            <div class="water-card" onclick="selectManager('3) KERNEL SU NEXT')">
+                <div class="tag-group"><span class="tag">1.45 MB</span><span class="tag">NEXT</span><span class="tag">STABLE</span></div>
+                <div class="card-title">3) KERNEL SU NEXT</div>
+                <div class="card-author">Author: Next Dev</div>
+            </div>
+
+            <div class="water-card" onclick="selectManager('4) RESUKI SU')">
+                <div class="tag-group"><span class="tag">0.95 MB</span><span class="tag">MOD</span><span class="tag">FAST</span></div>
+                <div class="card-title">4) RESUKI SU</div>
+                <div class="card-author">Author: Resuki Dev</div>
+            </div>
+
+            <div class="water-card" onclick="selectManager('5) MEMBO SU')">
+                <div class="tag-group"><span class="tag">0.88 MB</span><span class="tag">LIGHT</span><span class="tag">SYSTEM</span></div>
+                <div class="card-title">5) MEMBO SU</div>
+                <div class="card-author">Author: Membo Team</div>
+            </div>
+
+            <div class="water-card" onclick="selectManager('6) KOW SU')">
+                <div class="tag-group"><span class="tag">1.10 MB</span><span class="tag">HIDE</span><span class="tag">SECURITY</span></div>
+                <div class="card-title">6) KOW SU</div>
+                <div class="card-author">Author: Kow Dev</div>
+            </div>
+
+            <div class="water-card" onclick="selectManager('7) APATCH')">
+                <div class="tag-group"><span class="tag">2.10 MB</span><span class="tag">PATCH</span><span class="tag">ANDROID</span></div>
+                <div class="card-title">7) APATCH</div>
+                <div class="card-author">Author: APatch Team</div>
+            </div>
+
+            <button class="btn btn-danger" style="margin-top:10px;" onclick="logout()">Logout Session</button>
+        </div>
+
+        <!-- STEP 4: CATEGORIES VIEW -->
+        <div id="categoriesView" class="hidden">
+            <button class="unique-back-btn" onclick="goBack('mainDashboard')"><span>◀</span> BACK</button>
+            <div class="title" id="selectedManagerTitle" style="margin-bottom:20px;"></div>
+
+            <div class="cat-card c-api" onclick="openCategory('API FIX')"><span>API FIX</span><span>⚡</span></div>
+            <div class="cat-card c-boot" onclick="openCategory('BOOT ANIMATIONS CHANGE')"><span>BOOT ANIMATIONS CHANGE</span><span>🎬</span></div>
+            <div class="cat-card c-fps" onclick="openCategory('120 FPS BOOSTED FF')"><span>120 FPS BOOSTED FF</span><span>🎮</span></div>
+            <div class="cat-card c-touch" onclick="openCategory('DISPLAY TOUCH boost')"><span>DISPLAY TOUCH boost</span><span>🚀</span></div>
+            <div class="cat-card c-wifi" onclick="openCategory('WIFI TOOLS')"><span>WIFI TOOLS</span><span>📡</span></div>
+            <div class="cat-card c-termux" onclick="openCategory('TERMUX TOOLS')"><span>TERMUX TOOLS</span><span>💻</span></div>
+            <div class="cat-card c-modules" onclick="openCategory('MODULES')"><span>MODULES</span><span>📦</span></div>
+        </div>
+
+        <!-- STEP 5: FILE VIEW & CATEGORIZED LIST -->
+        <div id="fileView" class="hidden">
+            <button class="unique-back-btn" onclick="goBack('categoriesView')"><span>◀</span> BACK</button>
+            <div class="title" id="selectedCategoryTitle" style="margin-bottom:20px;"></div>
+
+            <!-- OWNER PERMANENT LINK ADD CONTROLS -->
+            <div id="adminFileControls" class="admin-box hidden">
+                <h4 style="color:#ff0055; margin-bottom:8px;">[Owner Permanent Upload Control]</h4>
+                <p style="font-size:11px; color:#aaa; margin-bottom:10px;">Paste Google Drive / Direct Links for all users (Global Sync).</p>
+                
+                <input type="text" id="fileTitleInput" placeholder="File Name (e.g., App.apk or Module.zip)" class="input-field">
+                <input type="text" id="fileUrlInput" placeholder="Direct Download / Google Drive Link" class="input-field">
+                <input type="text" id="fileSizeInput" placeholder="File Size (e.g., 45 MB)" class="input-field">
+                
+                <button class="btn" id="uploadBtn" style="background:#ff0055; color:#fff;" onclick="addPermanentFileItem()">Publish Item for All Users</button>
+            </div>
+
+            <div id="fileListContainer"></div>
+        </div>
+
+    </div>
+
+    <script>
+        let isOwner = false;
+        let currentManager = "";
+        let currentCategory = "";
+
+        // FREE CLOUD DATABASE SETUP (JSONBIN.IO)
+        const JSONBIN_BIN_ID = "66a8dbbde410157d3a824cb2"; 
+        const JSONBIN_MASTER_KEY = "$2a$10$wN9aL4j9b8rS7uD3W4E.9uO7/4hVz4G9P7Z7Q0W3E4R5T6Y7U8I9O";
+
+        let appUserKey = localStorage.getItem("app_user_key") || "USER123";
+        let keyExpireTime = localStorage.getItem("key_expire_time") || (Date.now() + 86400000 * 30);
+        let dbFiles = {};
+
+        window.onload = function() { fetchCloudData(); };
+
+        // FETCH DATA FROM CLOUD FOR ALL USERS
+        function fetchCloudData() {
+            fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+                headers: { "X-Master-Key": JSONBIN_MASTER_KEY }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.record) {
+                    dbFiles = data.record;
+                    localStorage.setItem("app_cloud_cache", JSON.stringify(dbFiles));
+                }
+                checkAutoLogin();
+            })
+            .catch(err => {
+                dbFiles = JSON.parse(localStorage.getItem("app_cloud_cache")) || {};
+                checkAutoLogin();
+            });
+        }
+
+        // SAVE DATA TO CLOUD SO ALL USERS SEE IT
+        function syncCloudData(callback) {
+            fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Master-Key": JSONBIN_MASTER_KEY
+                },
+                body: JSON.stringify(dbFiles)
+            })
+            .then(res => res.json())
+            .then(data => {
+                localStorage.setItem("app_cloud_cache", JSON.stringify(dbFiles));
+                if(callback) callback();
+            })
+            .catch(err => {
+                alert("Cloud Sync failed! Please check connection.");
+            });
+        }
+
+        function checkAutoLogin() {
+            const savedKey = localStorage.getItem("saved_user_key");
+            if(savedKey) {
+                document.getElementById("loginSection").classList.add("hidden");
+                document.getElementById("loadingSection").classList.remove("hidden");
+                setTimeout(() => {
+                    document.getElementById("loadingSection").classList.add("hidden");
+                    if(savedKey === "RRP") { isOwner = true; showDashboard(); }
+                    else if(savedKey === appUserKey && Date.now() < keyExpireTime) { isOwner = false; showDashboard(); }
+                    else {
+                        alert("Session Expired or Invalid Key!");
+                        localStorage.removeItem("saved_user_key");
+                        document.getElementById("loginSection").classList.remove("hidden");
+                    }
+                }, 800);
+            }
+        }
+
+        function handleLogin() {
+            const key = document.getElementById("userKey").value;
+            if(key === "RRP") { isOwner = true; localStorage.setItem("saved_user_key", key); showDashboard(); }
+            else if(key === appUserKey) {
+                if(Date.now() > keyExpireTime) { alert("Key Expired!"); return; }
+                isOwner = false; localStorage.setItem("saved_user_key", key); showDashboard();
+            } else { alert("Invalid Access Key!"); }
+        }
+
+        function showDashboard() {
+            document.getElementById("loginSection").classList.add("hidden");
+            document.getElementById("mainDashboard").classList.remove("hidden");
+            
+            if(isOwner) {
+                document.getElementById("remainingTimeText").innerText = "Role: OWNER (Full Access)";
+                document.getElementById("ownerGlobalPanel").classList.remove("hidden");
+                document.getElementById("newAppKeyInput").value = appUserKey;
+            } else {
+                document.getElementById("ownerGlobalPanel").classList.add("hidden");
+                startCountdownTimer();
+            }
+        }
+
+        function startCountdownTimer() {
+            setInterval(() => {
+                const diff = keyExpireTime - Date.now();
+                if(diff <= 0) {
+                    document.getElementById("remainingTimeText").innerText = "Key Expired!";
+                } else {
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+                    document.getElementById("remainingTimeText").innerText = `Remaining Time: ${days}d ${hours}h ${mins}m ${secs}s`;
+                }
+            }, 1000);
+        }
+
+        function updateAppKey() {
+            const newKey = document.getElementById("newAppKeyInput").value;
+            const days = parseInt(document.getElementById("keyValidityDays").value);
+            if(newKey.trim() !== "") {
+                appUserKey = newKey.trim();
+                keyExpireTime = Date.now() + (days * 24 * 60 * 60 * 1000);
+                localStorage.setItem("app_user_key", appUserKey);
+                localStorage.setItem("key_expire_time", keyExpireTime);
+                alert(`Key Updated to: '${appUserKey}' (${days} Days)`);
+            }
+        }
+
+        function removeUserKey() {
+            localStorage.removeItem("app_user_key");
+            localStorage.removeItem("key_expire_time");
+            appUserKey = "BLOCKED_" + Math.random();
+            keyExpireTime = 0;
+            alert("Key Blocked Successfully!");
+        }
+
+        function selectManager(name) {
+            currentManager = name;
+            document.getElementById("mainDashboard").classList.add("hidden");
+            document.getElementById("categoriesView").classList.remove("hidden");
+            document.getElementById("selectedManagerTitle").innerText = name;
+        }
+
+        function openCategory(catName) {
+            currentCategory = catName;
+            document.getElementById("categoriesView").classList.add("hidden");
+            document.getElementById("fileView").classList.remove("hidden");
+            document.getElementById("selectedCategoryTitle").innerText = catName;
+
+            if(isOwner) document.getElementById("adminFileControls").classList.remove("hidden");
+            else document.getElementById("adminFileControls").classList.add("hidden");
+
+            renderCategorizedFiles();
+        }
+
+        function detectFileType(name) {
+            const ext = name.split('.').pop().toLowerCase();
+            if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) return 'PHOTO';
+            if (['mp4', 'mkv', 'webm', '3gp'].includes(ext)) return 'VIDEO';
+            if (ext === 'apk') return 'APK';
+            return 'DOCUMENT';
+        }
+
+        function addPermanentFileItem() {
+            const name = document.getElementById("fileTitleInput").value.trim();
+            const url = document.getElementById("fileUrlInput").value.trim();
+            const size = document.getElementById("fileSizeInput").value.trim() || "Permanent File";
+
+            if(!name || !url) { alert("Please fill File Name & Direct URL Link!"); return; }
+
+            const btn = document.getElementById("uploadBtn");
+            btn.innerText = "Publishing to Cloud...";
+            btn.disabled = true;
+
+            const detectedType = detectFileType(name);
+            const storageKey = currentManager + "_" + currentCategory;
+            
+            if(!dbFiles[storageKey]) dbFiles[storageKey] = [];
+
+            dbFiles[storageKey].push({
+                id: Date.now(),
+                type: detectedType,
+                name: name,
+                size: size,
+                url: url
+            });
+
+            syncCloudData(() => {
+                alert(`Published Successfully for ALL USERS globally!`);
+                btn.innerText = "Publish Item for All Users";
+                btn.disabled = false;
+
+                document.getElementById("fileTitleInput").value = "";
+                document.getElementById("fileUrlInput").value = "";
+                document.getElementById("fileSizeInput").value = "";
+
+                renderCategorizedFiles();
+            });
+        }
+
+        function deleteFile(id) {
+            if(confirm("Are you sure you want to delete this file for all users?")) {
+                const storageKey = currentManager + "_" + currentCategory;
+                if(dbFiles[storageKey]) {
+                    dbFiles[storageKey] = dbFiles[storageKey].filter(item => item.id !== id);
+                    syncCloudData(() => {
+                        renderCategorizedFiles();
+                    });
+                }
+            }
+        }
+
+        function renderCategorizedFiles() {
+            const container = document.getElementById("fileListContainer");
+            container.innerHTML = "";
+
+            const storageKey = currentManager + "_" + currentCategory;
+            let items = dbFiles[storageKey] || [];
+
+            if(items.length === 0) {
+                container.innerHTML = "<p style='color:#64748b; text-align:center;'>No files published yet.</p>";
+                return;
+            }
+
+            const types = ["PHOTO", "VIDEO", "APK", "DOCUMENT"];
+            const titles = { PHOTO: "🖼 PHOTOS", VIDEO: "🎥 VIDEOS (Stream)", APK: "📱 APK APPLICATIONS", DOCUMENT: "📄 ZIP / FILES / DOCUMENTS" };
+
+            types.forEach(t => {
+                const filtered = items.filter(i => i.type === t);
+                if(filtered.length > 0) {
+                    const secHeader = document.createElement("div");
+                    secHeader.className = "section-header";
+                    secHeader.innerText = titles[t];
+                    container.appendChild(secHeader);
+
+                    filtered.forEach(item => {
+                        const card = document.createElement("div");
+                        card.className = "water-card";
+                        
+                        let contentHTML = `<div class="card-title">${item.name}</div><div class="card-author">Size: ${item.size}</div>`;
+
+                        if(item.type === "PHOTO") {
+                            contentHTML += `<img src="${item.url}" class="media-preview-img">
+                            <a href="${item.url}" download="${item.name}" target="_blank" style="text-decoration:none;">
+                                <button class="btn">⚡ Download Photo</button>
+                            </a>`;
+                        } else if(item.type === "VIDEO") {
+                            contentHTML += `<video controls controlsList="nodownload" oncontextmenu="return false;">
+                                <source src="${item.url}">
+                                Your browser does not support video playback.
+                            </video>`;
+                        } else {
+                            contentHTML += `<a href="${item.url}" download="${item.name}" target="_blank" style="text-decoration:none;">
+                                <button class="btn">⚡ Direct Download File / APK</button>
+                            </a>`;
+                        }
+
+                        if(isOwner) {
+                            contentHTML += `<button class="btn btn-danger" onclick="deleteFile(${item.id})">Delete Item</button>`;
+                        }
+
+                        card.innerHTML = contentHTML;
+                        container.appendChild(card);
+                    });
+                }
+            });
+        }
+
+        function goBack(targetId) {
+            document.getElementById("categoriesView").classList.add("hidden");
+            document.getElementById("fileView").classList.add("hidden");
+            document.getElementById(targetId).classList.remove("hidden");
+        }
+
+        function logout() {
+            localStorage.removeItem("saved_user_key");
+            location.reload();
+        }
+    </script>
+</body>
+</html>
