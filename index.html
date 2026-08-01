@@ -22,7 +22,7 @@
         .title { color: #00f2fe; font-size: 22px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; text-align: center; text-shadow: 0 0 15px rgba(0,242,254,0.6); }
         .subtitle { color: #94a3b8; font-size: 13px; margin-bottom: 20px; text-align: center; }
         
-        /* FIRST UI: WATER GLASS EFFECT CARDS (YURIKEY STYLE) */
+        /* UNIFIED WATER GLASS EFFECT CARDS FOR ALL SECTIONS */
         .water-card {
             background: linear-gradient(135deg, rgba(11, 24, 43, 0.9), rgba(6, 16, 29, 0.95));
             border: 1.5px solid rgba(0, 242, 254, 0.35);
@@ -88,24 +88,13 @@
             transition: 0.3s; margin-bottom: 20px; text-transform: uppercase;
         }
 
-        /* CATEGORY CARDS (EXACT COLORS FROM YOUR SCREENSHOT) */
+        /* CATEGORY WATER GLASS CARDS (SAME AS FIRST UI) */
         .cat-card {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 18px 22px; border-radius: 18px; margin-bottom: 14px;
-            font-weight: 800; font-size: 16px; cursor: pointer;
-            transition: all 0.3s ease; position: relative; overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            font-size: 16px;
         }
-        .cat-card:hover { transform: scale(1.02); }
-
-        .c-api { background: linear-gradient(135deg, #00c6ff, #0072ff); }
-        .c-boot { background: linear-gradient(135deg, #b5179e, #7209b7); }
-        .c-fps { background: linear-gradient(135deg, #ff4e50, #f9d423); color: #050811; }
-        .c-touch { background: linear-gradient(135deg, #11998e, #38ef7d); color: #050811; }
-        .c-wifi { background: linear-gradient(135deg, #ff416c, #8a2387); }
-        .c-termux { background: linear-gradient(135deg, #f12711, #f5af19); color: #050811; }
-        .c-modules { background: linear-gradient(135deg, #4776e6, #8e54e9); }
 
         /* FILE SECTIONS & SPACING */
         .section-header {
@@ -226,18 +215,32 @@
             <button class="btn btn-danger" style="margin-top:10px;" onclick="logout()">Logout Session</button>
         </div>
 
-        <!-- STEP 4: CATEGORIES VIEW -->
+        <!-- STEP 4: CATEGORIES VIEW (WATER GLASS UI MATCHED WITH FIRST UI) -->
         <div id="categoriesView" class="hidden">
             <button class="unique-back-btn" onclick="goBack('mainDashboard')"><span>◀</span> BACK</button>
             <div class="title" id="selectedManagerTitle" style="margin-bottom:20px;"></div>
 
-            <div class="cat-card c-api" onclick="openCategory('API FIX')"><span>API FIX</span><span>⚡</span></div>
-            <div class="cat-card c-boot" onclick="openCategory('BOOT ANIMATIONS CHANGE')"><span>BOOT ANIMATIONS CHANGE</span><span>🎬</span></div>
-            <div class="cat-card c-fps" onclick="openCategory('120 FPS BOOSTED FF')"><span>120 FPS BOOSTED FF</span><span>🎮</span></div>
-            <div class="cat-card c-touch" onclick="openCategory('DISPLAY TOUCH boost')"><span>DISPLAY TOUCH boost</span><span>🚀</span></div>
-            <div class="cat-card c-wifi" onclick="openCategory('WIFI TOOLS')"><span>WIFI TOOLS</span><span>📡</span></div>
-            <div class="cat-card c-termux" onclick="openCategory('TERMUX TOOLS')"><span>TERMUX TOOLS</span><span>💻</span></div>
-            <div class="cat-card c-modules" onclick="openCategory('MODULES')"><span>MODULES</span><span>📦</span></div>
+            <div class="water-card cat-card" onclick="openCategory('API FIX')">
+                <span class="card-title" style="font-size:16px;">API FIX</span><span>⚡</span>
+            </div>
+            <div class="water-card cat-card" onclick="openCategory('BOOT ANIMATIONS CHANGE')">
+                <span class="card-title" style="font-size:16px;">BOOT ANIMATIONS CHANGE</span><span>🎬</span>
+            </div>
+            <div class="water-card cat-card" onclick="openCategory('120 FPS BOOSTED FF')">
+                <span class="card-title" style="font-size:16px;">120 FPS BOOSTED FF</span><span>🎮</span>
+            </div>
+            <div class="water-card cat-card" onclick="openCategory('DISPLAY TOUCH boost')">
+                <span class="card-title" style="font-size:16px;">DISPLAY TOUCH boost</span><span>🚀</span>
+            </div>
+            <div class="water-card cat-card" onclick="openCategory('WIFI TOOLS')">
+                <span class="card-title" style="font-size:16px;">WIFI TOOLS</span><span>📡</span>
+            </div>
+            <div class="water-card cat-card" onclick="openCategory('TERMUX TOOLS')">
+                <span class="card-title" style="font-size:16px;">TERMUX TOOLS</span><span>💻</span>
+            </div>
+            <div class="water-card cat-card" onclick="openCategory('MODULES')">
+                <span class="card-title" style="font-size:16px;">MODULES</span><span>📦</span>
+            </div>
         </div>
 
         <!-- STEP 5: FILE VIEW & CATEGORIZED LIST -->
@@ -536,4 +539,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
